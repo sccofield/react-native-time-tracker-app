@@ -15,8 +15,29 @@ export default class App extends React.Component {
       elapsed: 5456099, isRunning: true,
       }, {
       title: 'Bake squash', project: 'Kitchen Chores', id: uuidv4(),
-      elapsed: 1273998, isRunning: false,
+      elapsed: 1273998, isRunning: true,
       }, ],
+  }
+
+  componentDidMount() {
+    const TIME_INTERVAL = 1000;
+    this.intervalId = setInterval(() => { 
+      const { timers } = this.state;
+
+      this.setState({
+        timers: timers.map(timer => {
+          const { elapsed, isRunning } = timer;
+          return {
+            ...timer,
+            elapsed: isRunning ? elapsed + TIME_INTERVAL : elapsed,
+          }; 
+        }),
+      });
+    }, TIME_INTERVAL);
+  }
+
+  componentWillUnmount() { 
+    clearInterval(this.intervalId);
   }
 
   handleCreateFormSubmit = timer => { 
